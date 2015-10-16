@@ -1,8 +1,10 @@
 
 class Mastermind
 
+  attr_accessor :guesses
 
   def initialize
+    @guesses = 0
     color= %w(r g b y)
     $answer = color.shuffle!
   end
@@ -14,12 +16,12 @@ class Mastermind
   end
 
   def self.eval_intro_response
-    if @player_response == "p"
+    if @player_response == "p" || @player_response == "play"
       start_game
-    elsif @player_response == "i"
+    elsif @player_response == "i" || @player_response == "instructions"
       print_instructions
       start_game
-    elsif @player_response == "q"
+    elsif @player_response == "q" || @player_response == "quit"
       exit_game
     else
       puts "try again"
@@ -45,7 +47,6 @@ class Mastermind
   def self.eval_answer(guess)
     guess.sort!
     $answer.sort!
-    require 'pry'; binding.pry
 
     if guess == $answer
       puts "You Win an are amazing"
@@ -54,6 +55,7 @@ class Mastermind
 
     correct = 0
     incorrect = 0
+    
     4.times do |i|
       if $answer.include?(i)
         correct += 1
@@ -63,8 +65,11 @@ class Mastermind
         guess.shift
       end
     end
-      puts "correct : #{correct}...incorrect: #{incorrect}"
-      puts "Your guess was #{guess}... the correct answer was:#{$answer}"
+    summary
+  end
+
+  def self.summary
+    puts "Congratulations! You guessed the sequence #{$answer}and it took #{@guesses} geusses."
   end
 end
 
